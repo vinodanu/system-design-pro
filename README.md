@@ -63,9 +63,9 @@ Every lesson includes an original, lightweight SVG concept illustration under `p
 
 ## Premium concept artwork (first 10)
 
-Ten high-resolution generated PNG artworks are stored under `public/concept-art/` and automatically loaded by `ConceptHero` and `ConceptIllustration`. They replace the older SVGs in both the top lesson hero and the visual overview for: Internet, DNS, HTTP/HTTPS, Load Balancing, Consistent Hashing, Cache Aside, SQL vs NoSQL, Kafka, Rate Limiting and CAP. All 23 lessons retain MDX explanations and simulations. The remaining 13 still use the existing SVGs. The artwork is decorative/explanatory rather than the authoritative source of algorithmic behavior; interactive components supply the dynamic behavior.
+Ten high-resolution generated PNG artworks are stored under `concept-art` and automatically loaded by `ConceptHero` and `ConceptIllustration`. They replace the older SVGs in both the top lesson hero and the visual overview for: Internet, DNS, HTTP/HTTPS, Load Balancing, Consistent Hashing, Cache Aside, SQL vs NoSQL, Kafka, Rate Limiting and CAP. All 23 lessons retain MDX explanations and simulations. The remaining 13 still use the existing SVGs. The artwork is decorative/explanatory rather than the authoritative source of algorithmic behavior; interactive components supply the dynamic behavior.
 
 
 ## Premium concept artwork
 
-All 23 lessons now use locally hosted high-resolution PNGs in `public/concept-art/`. The same artwork appears in the lesson hero and visual overview. Original SVGs remain in `public/illustrations/` as fallbacks.
+All 23 lessons now use locally hosted high-resolution PNGs in `concept-art`. The same artwork appears in the lesson hero and visual overview. Original SVGs remain in `public/illustrations/` as fallbacks.
