@@ -1,0 +1,52 @@
+# Rate Limiting
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+Rate limiting protects resources by controlling how much work one caller can request.
+
+## 2. Mental model
+
+Token bucket permits short bursts up to its bucket capacity and replenishes tokens at a stable rate. Sliding windows approximate a request count over recent time.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+Implement limits at the API gateway and enforce per-user or per-tenant keys; distributed Redis-backed counters need atomic operations.
+
+## 5. Production tradeoffs
+
+Consider fairness, clock boundaries, retries and user experience. Return HTTP 429 with a useful Retry-After where practical.
+
+## 6. Check your understanding
+
+**Question:** Why use a token bucket rather than a fixed counter alone?
+
+**Answer:** It permits controlled bursts while bounding sustained request rate.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="rate-limiting" caption="Protecting OTP endpoint" />
+
+## Interactive walkthrough — Protecting an OTP API
+
+**Real-world example:** A token bucket permits bursts while blocking repeated abusive requests.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="rate-limiting" />
+
+### Apply it in a Java backend
+
+For distributed Spring Boot replicas, Redis atomics or gateway limits avoid per-instance bypass.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

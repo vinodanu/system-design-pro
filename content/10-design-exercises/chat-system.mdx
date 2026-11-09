@@ -1,0 +1,52 @@
+# Design a Chat System
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+A chat service must accept messages, deliver them to participants and recover missed messages.
+
+## 2. Mental model
+
+Separate connection handling from persistent message storage. Define message IDs, delivery acknowledgments, per-conversation ordering and offline synchronization.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+Use WebSocket endpoints for live delivery and Kafka or queues for decoupled fanout when warranted. Persist messages before claiming durable acceptance.
+
+## 5. Production tradeoffs
+
+Global ordering is expensive; prefer ordering scoped to a conversation where product requirements allow.
+
+## 6. Check your understanding
+
+**Question:** Can a WebSocket connection alone guarantee message durability?
+
+**Answer:** No. Durability requires persistent storage and an explicit acknowledgment contract.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="chat-system" caption="Message to a friend" />
+
+## Interactive walkthrough — Two friends exchanging messages
+
+**Real-world example:** A WebSocket gateway delivers messages and stores them for offline recipients.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="chat-system" />
+
+### Apply it in a Java backend
+
+Ordering is usually per conversation; plan fan-out, reconnects, acknowledgments, and deduplication.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

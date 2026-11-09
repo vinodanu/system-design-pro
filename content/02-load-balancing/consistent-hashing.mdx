@@ -1,0 +1,78 @@
+# Consistent Hashing: Why Adding a Server Shouldn't Move Every Key
+
+Imagine a Spring Boot service storing session data across three Redis nodes. Each request needs to find the server responsible for a key. If you route with `hash(key) % N`, growing from 3 to 4 nodes can change the destination of **many** keys. Cache misses spike, and suddenly your database gets hammered.
+
+## 1. The beginner's mental model
+
+Instead of placing servers in a numbered list, place **servers and keys on the same circular hash space** (think of a clock). To locate a key, walk clockwise until you meet a server. That server owns the key.
+
+When you insert a new server, only the keys between its counterclockwise predecessor and the new node move to it. The other keys keep their owners. When a server disappears, its keys move clockwise to the next server.
+
+## 2. Try it yourself
+
+Press **Add Server** or **Remove Server** below. Pink dots represent keys that changed ownership compared with the previous configuration. The number of keys moved is shown above the ring.
+
+<ConsistentHashingAnim />
+
+## 3. Compare with modulo hashing
+
+A naive mapping:
+
+```java
+int destination = Math.floorMod(key.hashCode(), serverCount);
+```
+
+Here, `serverCount` is part of every placement decision. Changing it changes many mappings. Consistent hashing maps **each key and server independently** into a stable hash space, which substantially reduces movement during membership changes.
+
+## 4. Java backend implementation considerations
+
+For a high-concurrency Spring Boot / WebFlux API, lookups should be lightweight and deterministic. One approach is to maintain an **immutable sorted map** from hashed ring positions to server metadata. Read requests can use `ceilingEntry(keyHash)` and wrap to `firstEntry()` when the ceiling is absent.
+
+```java
+// Simplified: positions and keys must use the SAME hash function and unsigned ordering.
+// Keep a published immutable snapshot; don't mutate the shared map while routing.
+Map.Entry<Long, Server> owner(NavigableMap<Long, Server> ring, long keyHash) {
+    Map.Entry<Long, Server> entry = ring.ceilingEntry(keyHash);
+    return entry != null ? entry : ring.firstEntry();
+}
+```
+
+In production, don't use an ordinary mutable `TreeMap` from multiple request threads without synchronization. Build a fresh immutable snapshot of the ring when membership changes, then publish it atomically (for example via an `AtomicReference`). Request threads read the current snapshot without waiting for topology updates. The lookup cost on a tree-backed map is **O(log V)** for `V` virtual-node entries.
+
+**Spring WebFlux note:** WebFlux makes network I/O non-blocking; it does not automatically make your routing data structures thread-safe. Avoid blocking calls on event-loop threads. In a reactive cache client, the owner lookup is fast, but the actual Redis request should use a non-blocking driver or be isolated appropriately.
+
+## 5. Production tradeoffs
+
+- **Virtual nodes (vnodes):** place several points per physical server to improve balance and reduce skew, especially with few servers.
+- **Replication:** copy data to successors or replicas; a single owner doesn't protect you from a node failure.
+- **Membership changes:** avoid every application instance routing with a different ring version during rollouts. Define a migration strategy and ownership handoff.
+- **Hash quality:** use a deterministic, well-distributed hash with stable encoding across Java, Go, and other clients.
+- **Hot keys:** consistent hashing distributes *key ranges*, not workload perfectly. A celebrity account or popular product can still overload one node.
+- **Alternatives:** rendezvous hashing is a useful alternative when you want simple membership management, but it has different lookup/weighting tradeoffs.
+
+## 6. Interview checkpoint
+
+**Q:** Does consistent hashing guarantee zero key movement when a new node joins?
+
+**A:** No. It minimizes movement by relocating mainly the keys in the new node's assigned arc. For a balanced ring, the expected remapped fraction is roughly `1 / (N + 1)` when adding one node to `N`, though the actual result varies with placement, keys, vnodes, and weights.
+
+**Next:** Explore load balancer algorithms, caching, replication, circuit breakers, and distributed coordination.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="consistent-hashing" caption="Distributed cache" />
+
+## Interactive walkthrough — Distributed product cache
+
+**Real-world example:** Adding one cache server should not shuffle almost every cached product key.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="consistent-hashing" />
+
+### Apply it in a Java backend
+
+Virtual nodes improve balancing; immutable ring snapshots are helpful for thread-safe routing.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

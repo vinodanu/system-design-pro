@@ -1,0 +1,52 @@
+# Leader Election and Failover
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+Some distributed tasks require one active coordinator. Leader election helps nodes agree who coordinates.
+
+## 2. Mental model
+
+A lease or consensus-based protocol grants leadership; terms, fencing tokens, and expiry protect against obsolete leaders continuing to write.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+For Spring Boot scheduled jobs, a distributed lock may suffice in simpler deployments; critical coordination benefits from systems designed for consensus.
+
+## 5. Production tradeoffs
+
+Network delays and paused processes can cause split brain unless writes are fenced or validated.
+
+## 6. Check your understanding
+
+**Question:** Why is a lock timeout alone insufficient for safety?
+
+**Answer:** An old leader may resume after losing its lock and still attempt writes; fencing prevents stale owners acting.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="leader-election" caption="Failover of a coordinator" />
+
+## Interactive walkthrough — One scheduled billing job across replicas
+
+**Real-world example:** Only one instance should coordinate a shared scheduled task at a time.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="leader-election" />
+
+### Apply it in a Java backend
+
+Use fencing tokens and lease expiry; a lock alone is not always sufficient for correctness.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

@@ -1,0 +1,393 @@
+{
+  "how-the-internet-works": {
+    "example": "Ordering food in an app",
+    "description": "Your phone sends a request through Wi-Fi and the internet to a restaurant-order API. The server returns order status.",
+    "nodes": [
+      "Phone",
+      "Router / ISP",
+      "API server",
+      "Response"
+    ],
+    "steps": [
+      "Tap \u201cPlace order\u201d \u2014 the browser creates an HTTPS request.",
+      "Your router and ISP carry packets toward the service.",
+      "A server processes the request and persists the order.",
+      "The response travels back and the UI shows the order ID."
+    ],
+    "engineering": "Network hops can fail independently; use timeouts, TLS, and request IDs when building Spring Boot APIs."
+  },
+  "dns-explained": {
+    "example": "Opening your bank website",
+    "description": "A browser must translate a domain name into an IP address before reaching the server.",
+    "nodes": [
+      "Browser cache",
+      "DNS resolver",
+      "Authoritative DNS",
+      "IP address"
+    ],
+    "steps": [
+      "The browser checks its cached DNS entry.",
+      "On a miss, a recursive resolver looks up the name.",
+      "Authoritative DNS returns the current record and TTL.",
+      "The browser connects to the resolved IP."
+    ],
+    "engineering": "DNS caches are TTL-bound; plan for stale records and connection reuse during deployments."
+  },
+  "http-https": {
+    "example": "Logging in to an ecommerce store",
+    "description": "The browser establishes an encrypted connection before submitting credentials.",
+    "nodes": [
+      "Browser",
+      "TLS handshake",
+      "HTTPS API",
+      "JSON response"
+    ],
+    "steps": [
+      "The browser requests a secure connection.",
+      "TLS establishes encryption and authenticates the server certificate.",
+      "An HTTP request carries the login payload over TLS.",
+      "The API returns a status and secure session token or cookie."
+    ],
+    "engineering": "Use HTTPS everywhere, validate tokens, and never log passwords or bearer tokens."
+  },
+  "load-balancer-algorithms": {
+    "example": "Flash-sale traffic",
+    "description": "A load balancer spreads many checkout requests across healthy replicas.",
+    "nodes": [
+      "Clients",
+      "Load balancer",
+      "App A / App B",
+      "Healthy response"
+    ],
+    "steps": [
+      "Requests arrive at a public endpoint.",
+      "The load balancer selects a healthy backend.",
+      "Different requests can reach different instances.",
+      "Health checks remove failed instances from rotation."
+    ],
+    "engineering": "Round robin ignores unequal request cost; consider least-connections and autoscaling."
+  },
+  "consistent-hashing": {
+    "example": "Distributed product cache",
+    "description": "Adding one cache server should not shuffle almost every cached product key.",
+    "nodes": [
+      "Hash key",
+      "Ring lookup",
+      "Owning server",
+      "Cache entry"
+    ],
+    "steps": [
+      "Hash the product ID into a stable numeric position.",
+      "Walk clockwise on the ring to the next node.",
+      "Read or write the key on its owning node.",
+      "When membership changes, only some keys gain a new owner."
+    ],
+    "engineering": "Virtual nodes improve balancing; immutable ring snapshots are helpful for thread-safe routing."
+  },
+  "cache-aside": {
+    "example": "Loading a popular product page",
+    "description": "The first product request reads PostgreSQL; subsequent requests hit Redis.",
+    "nodes": [
+      "API",
+      "Redis cache",
+      "Database",
+      "Response"
+    ],
+    "steps": [
+      "The API checks Redis using a product key.",
+      "A miss falls through to the database.",
+      "The API stores the result with a TTL.",
+      "The next request can read the cached value."
+    ],
+    "engineering": "Avoid stampedes using single-flight locks; invalidation and stale prices require care."
+  },
+  "cdn-and-ttl": {
+    "example": "Streaming a popular tutorial",
+    "description": "Static files are served from an edge location, then refreshed after their cache lifetime.",
+    "nodes": [
+      "Viewer",
+      "CDN edge",
+      "Origin",
+      "Updated asset"
+    ],
+    "steps": [
+      "A viewer requests the thumbnail from a nearby edge.",
+      "A cache hit returns it without contacting origin.",
+      "Once TTL expires, the edge revalidates with origin.",
+      "The refreshed asset is cached for later viewers."
+    ],
+    "engineering": "Use hashed asset filenames for safe long-lived caching and explicit invalidation when needed."
+  },
+  "sql-vs-nosql": {
+    "example": "Order checkout versus browsing catalog",
+    "description": "Transactions require strong relational constraints, while a flexible catalog can use document records.",
+    "nodes": [
+      "User action",
+      "Data model",
+      "Chosen database",
+      "Result"
+    ],
+    "steps": [
+      "Identify access patterns and invariants.",
+      "Choose relational tables for transactional order integrity.",
+      "Choose documents when nested product attributes vary.",
+      "Test indexing, queries, and consistency needs under load."
+    ],
+    "engineering": "Choose by correctness and access patterns, not popularity; Hibernate/JPA and reactive stores differ."
+  },
+  "indexing": {
+    "example": "Finding an order by order number",
+    "description": "A database index avoids scanning every row to locate one order.",
+    "nodes": [
+      "SQL query",
+      "B-tree index",
+      "Matching row",
+      "Result"
+    ],
+    "steps": [
+      "An API requests order_no = 2031.",
+      "The database planner chooses an index when beneficial.",
+      "The index narrows the row locations.",
+      "The database fetches matching data and returns it."
+    ],
+    "engineering": "Indexes speed reads but increase write amplification; inspect EXPLAIN plans before optimizing."
+  },
+  "sharding-and-replication": {
+    "example": "Global marketplace orders",
+    "description": "Partition orders by tenant ID and replicate each partition for availability.",
+    "nodes": [
+      "Tenant ID",
+      "Shard router",
+      "Primary shard",
+      "Replica"
+    ],
+    "steps": [
+      "A tenant ID is hashed or mapped to a shard.",
+      "The router directs writes to the owning primary.",
+      "The primary commits the order locally.",
+      "Replication sends changes to another copy."
+    ],
+    "engineering": "Rebalancing and replication lag are major concerns; choose shard keys by traffic distribution."
+  },
+  "kafka-fundamentals": {
+    "example": "Trade compliance events",
+    "description": "An API publishes a compliance event; consumers in a group process records from partitions.",
+    "nodes": [
+      "Producer",
+      "Topic partition",
+      "Consumer group",
+      "Processed event"
+    ],
+    "steps": [
+      "A Spring Boot producer publishes an event with a key.",
+      "Kafka appends it to an assigned partition.",
+      "One consumer in a group receives that partition.",
+      "The consumer processes and commits its offset."
+    ],
+    "engineering": "Kafka is commonly at-least-once; handle duplicates with idempotent processing and stable event IDs."
+  },
+  "queues-vs-events": {
+    "example": "Invoice generation and order analytics",
+    "description": "A work queue distributes invoice jobs; an event stream lets multiple teams independently react.",
+    "nodes": [
+      "Order service",
+      "Queue / topic",
+      "Worker / subscriber",
+      "Outcome"
+    ],
+    "steps": [
+      "An order is marked paid.",
+      "A queue sends a work item to an invoice worker.",
+      "An event stream can broadcast the order-paid fact to many services.",
+      "Consumers acknowledge work or track offsets independently."
+    ],
+    "engineering": "Queues distribute tasks; streams retain ordered histories within partitions and enable replay."
+  },
+  "rate-limiting": {
+    "example": "Protecting an OTP API",
+    "description": "A token bucket permits bursts while blocking repeated abusive requests.",
+    "nodes": [
+      "Incoming request",
+      "Token bucket",
+      "Allow / reject",
+      "API"
+    ],
+    "steps": [
+      "A user makes a login-code request.",
+      "The limiter checks available tokens for the identity.",
+      "If a token exists, the call proceeds.",
+      "If exhausted, return HTTP 429 and a retry hint."
+    ],
+    "engineering": "For distributed Spring Boot replicas, Redis atomics or gateway limits avoid per-instance bypass."
+  },
+  "retries-circuit-breakers": {
+    "example": "Calling a payment provider",
+    "description": "Retries can recover transient faults, but a circuit breaker stops hammering a failing dependency.",
+    "nodes": [
+      "API call",
+      "Retry policy",
+      "Circuit breaker",
+      "Fallback"
+    ],
+    "steps": [
+      "A downstream call times out.",
+      "A bounded retry adds jitter and backoff.",
+      "Repeated failure opens the breaker.",
+      "New requests fail fast until a probe confirms recovery."
+    ],
+    "engineering": "Only retry safe/idempotent operations; set deadlines and use Resilience4j with clear metrics."
+  },
+  "cap-and-consistency": {
+    "example": "Updating an account balance during a network split",
+    "description": "When two replicas lose contact, the system must choose how to handle operations that need cross-replica agreement.",
+    "nodes": [
+      "Client write",
+      "Replica A",
+      "Network partition",
+      "Replica B"
+    ],
+    "steps": [
+      "A client submits an update to replica A.",
+      "Connectivity between replicas is disrupted.",
+      "A consistency-first system may reject writes lacking quorum.",
+      "An availability-first system may accept divergent writes and reconcile later."
+    ],
+    "engineering": "CAP describes behavior under partitions, not a blanket tradeoff for every normal request."
+  },
+  "leader-election": {
+    "example": "One scheduled billing job across replicas",
+    "description": "Only one instance should coordinate a shared scheduled task at a time.",
+    "nodes": [
+      "Candidates",
+      "Election / lease",
+      "Leader",
+      "Followers"
+    ],
+    "steps": [
+      "Multiple replicas are running the same scheduler.",
+      "They coordinate using a quorum or lease.",
+      "One replica becomes leader for an epoch.",
+      "On failure, leadership moves while stale leaders are fenced."
+    ],
+    "engineering": "Use fencing tokens and lease expiry; a lock alone is not always sufficient for correctness."
+  },
+  "backpressure": {
+    "example": "Burst of order events",
+    "description": "A slow consumer should not buffer messages indefinitely during a traffic surge.",
+    "nodes": [
+      "Fast producer",
+      "Bounded buffer",
+      "Slow consumer",
+      "Demand signal"
+    ],
+    "steps": [
+      "The producer emits requests faster than they are processed.",
+      "The queue starts filling toward its capacity.",
+      "The consumer requests only what it can safely process.",
+      "The system slows, sheds, or queues extra work according to policy."
+    ],
+    "engineering": "Reactive Streams request(n) supports demand; blocking operations still need appropriate schedulers."
+  },
+  "threads-vs-webflux": {
+    "example": "10,000 concurrent status checks",
+    "description": "Compare thread-per-request blocking I/O with non-blocking event-loop-based processing.",
+    "nodes": [
+      "Incoming calls",
+      "Execution model",
+      "Remote I/O",
+      "Responses"
+    ],
+    "steps": [
+      "A request needs to fetch downstream data.",
+      "A blocking thread waits during socket I/O.",
+      "Non-blocking WebFlux releases execution capacity while I/O is pending.",
+      "On completion, the response pipeline resumes."
+    ],
+    "engineering": "WebFlux helps I/O-bound concurrency, not CPU-bound work; never block Netty event loops."
+  },
+  "api-gateway": {
+    "example": "Mobile food-delivery app",
+    "description": "A single gateway authenticates requests before routing to order and catalog services.",
+    "nodes": [
+      "Mobile client",
+      "Gateway",
+      "Order service",
+      "Response"
+    ],
+    "steps": [
+      "The app sends a request to a common public endpoint.",
+      "The gateway validates authentication and rate limits.",
+      "It routes the request to the correct service.",
+      "The response returns through the gateway."
+    ],
+    "engineering": "Keep gateway logic thin; avoid turning it into a distributed monolith."
+  },
+  "microservices-tradeoffs": {
+    "example": "Splitting a growing marketplace",
+    "description": "Separate catalog and order services only when teams and scaling needs justify distributed complexity.",
+    "nodes": [
+      "Client",
+      "Catalog service",
+      "Order service",
+      "Event bus"
+    ],
+    "steps": [
+      "A user places an order that references a product.",
+      "The order service validates domain rules.",
+      "Services exchange data through APIs or events.",
+      "Cross-service failures require retries and eventual consistency design."
+    ],
+    "engineering": "Service boundaries follow business ownership; distributed transactions and debugging cost real time."
+  },
+  "url-shortener": {
+    "example": "Creating a shareable campaign link",
+    "description": "Generate a unique short code and redirect visitors to the stored destination.",
+    "nodes": [
+      "Long URL",
+      "Code generator",
+      "URL store",
+      "Redirect"
+    ],
+    "steps": [
+      "A user submits a long URL to the API.",
+      "A unique token is generated and stored.",
+      "A visitor requests /abc123.",
+      "The service looks up the target and returns an HTTP redirect."
+    ],
+    "engineering": "Consider collision handling, hot-link caching, abuse protection, and 301 versus 302 semantics."
+  },
+  "chat-system": {
+    "example": "Two friends exchanging messages",
+    "description": "A WebSocket gateway delivers messages and stores them for offline recipients.",
+    "nodes": [
+      "Sender",
+      "WebSocket gateway",
+      "Message store",
+      "Recipient"
+    ],
+    "steps": [
+      "A sender opens a persistent WebSocket connection.",
+      "A message is validated and given an ID.",
+      "The system persists it before delivery.",
+      "The recipient receives it or catches up after reconnecting."
+    ],
+    "engineering": "Ordering is usually per conversation; plan fan-out, reconnects, acknowledgments, and deduplication."
+  },
+  "payment-system": {
+    "example": "Paying for an online purchase",
+    "description": "Idempotency ensures a client retry does not create two charges for one order.",
+    "nodes": [
+      "Checkout API",
+      "Idempotency check",
+      "Payment provider",
+      "Webhook / receipt"
+    ],
+    "steps": [
+      "Checkout submits a payment request with an idempotency key.",
+      "The service checks whether that key has already been processed.",
+      "The provider authorizes or declines the payment.",
+      "A verified webhook reconciles final state before fulfilment."
+    ],
+    "engineering": "Use durable idempotency records, signed webhooks, and explicit state transitions rather than naive retries."
+  }
+}

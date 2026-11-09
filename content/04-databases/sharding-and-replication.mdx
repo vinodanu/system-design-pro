@@ -1,0 +1,52 @@
+# Sharding and Replication
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+Sharding splits data across nodes; replication keeps copies of the same data.
+
+## 2. Mental model
+
+A shard key directs an entity to one partition. Replicas improve availability or read capacity depending on topology and consistency.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+Keep shard routing explicit in the service architecture; an immutable hash-ring snapshot can help route consistent keys, but cross-shard transactions and queries remain difficult.
+
+## 5. Production tradeoffs
+
+Skewed shard keys create hotspots. Replica lag can expose stale reads. Rebalancing and failover require careful planning.
+
+## 6. Check your understanding
+
+**Question:** Does replication alone increase write scalability?
+
+**Answer:** Not necessarily; many primary-replica architectures still funnel writes through one primary per shard.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="sharding-and-replication" caption="Growing customer database" />
+
+## Interactive walkthrough — Global marketplace orders
+
+**Real-world example:** Partition orders by tenant ID and replicate each partition for availability.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="sharding-and-replication" />
+
+### Apply it in a Java backend
+
+Rebalancing and replication lag are major concerns; choose shard keys by traffic distribution.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

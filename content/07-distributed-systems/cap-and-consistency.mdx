@@ -1,0 +1,52 @@
+# CAP and Consistency
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+Distributed nodes cannot avoid network partitions, so consistency and availability tradeoffs matter during partitions.
+
+## 2. Mental model
+
+CAP concerns how a partitioned system handles consistent responses versus availability. Outside failures, latency and consistency tradeoffs still exist; consistency is not a single Boolean.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+Use transactions where guarantees are needed; document exactly what a Spring Boot endpoint promises after a write, including read-after-write behavior.
+
+## 5. Production tradeoffs
+
+Eventual consistency requires user-facing expectations and reconciliation. CAP does not claim you may simply pick any two properties at all times.
+
+## 6. Check your understanding
+
+**Question:** What does CAP force you to think about?
+
+**Answer:** How the system responds when nodes cannot communicate yet clients continue issuing requests.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="cap-and-consistency" caption="Multi-region inventory" />
+
+## Interactive walkthrough — Updating an account balance during a network split
+
+**Real-world example:** When two replicas lose contact, the system must choose how to handle operations that need cross-replica agreement.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="cap-and-consistency" />
+
+### Apply it in a Java backend
+
+CAP describes behavior under partitions, not a blanket tradeoff for every normal request.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

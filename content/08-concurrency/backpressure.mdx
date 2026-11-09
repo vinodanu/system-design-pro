@@ -1,0 +1,52 @@
+# Backpressure
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+When producers emit work faster than consumers can process it, queues and memory usage grow.
+
+## 2. Mental model
+
+Backpressure lets downstream stages signal demand. Buffering buys time but cannot fix indefinite overload; dropping or rejecting work may be necessary.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+Project Reactor supports request-based flow control; choose bounded buffers and specify overflow behavior in each pipeline.
+
+## 5. Production tradeoffs
+
+Unbounded queues hide saturation until memory pressure causes failure. Monitoring queue depth and latency is essential.
+
+## 6. Check your understanding
+
+**Question:** Why are bounded queues safer?
+
+**Answer:** They prevent unlimited memory growth and make overload explicit.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="backpressure" caption="Slow database responses" />
+
+## Interactive walkthrough — Burst of order events
+
+**Real-world example:** A slow consumer should not buffer messages indefinitely during a traffic surge.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="backpressure" />
+
+### Apply it in a Java backend
+
+Reactive Streams request(n) supports demand; blocking operations still need appropriate schedulers.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

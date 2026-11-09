@@ -1,0 +1,52 @@
+# How the Internet Works
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+A browser does not contact a website by magic: it resolves a name, connects to an IP address, negotiates security, sends an HTTP request, and receives a response.
+
+## 2. Mental model
+
+DNS maps a hostname to addresses; TCP provides an ordered reliable byte stream; TLS protects traffic; HTTP defines application request and response semantics. A CDN or load balancer may sit between the client and application.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+Use Spring Boot Actuator and Micrometer to measure request latency. A slow endpoint may involve DNS, connection establishment, TLS, database calls, application time, or downstream services.
+
+## 5. Production tradeoffs
+
+Connection reuse and HTTP/2 multiplexing avoid repeated connection cost. Timeouts must be set at each hop. DNS cache staleness can complicate cutovers.
+
+## 6. Check your understanding
+
+**Question:** Why can a healthy Spring Boot service still feel slow?
+
+**Answer:** Network RTT, TLS handshakes, downstream dependencies and queuing all contribute to latency.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="how-the-internet-works" caption="Streaming a video" />
+
+## Interactive walkthrough — Ordering food in an app
+
+**Real-world example:** Your phone sends a request through Wi-Fi and the internet to a restaurant-order API. The server returns order status.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="how-the-internet-works" />
+
+### Apply it in a Java backend
+
+Network hops can fail independently; use timeouts, TLS, and request IDs when building Spring Boot APIs.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

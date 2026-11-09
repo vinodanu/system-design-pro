@@ -1,0 +1,52 @@
+# Kafka: Topics, Partitions and Consumer Groups
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+Kafka is an append-only distributed event log that lets producers and consumers work independently.
+
+## 2. Mental model
+
+A topic has partitions with ordering within each partition. Consumers in one group divide partitions; different groups can process the same data independently.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+Spring for Apache Kafka provides listeners and producers. Choose message keys to preserve per-entity ordering and design handlers for duplicate delivery.
+
+## 5. Production tradeoffs
+
+Offset commits and processing are separate operations; at-least-once handling needs idempotency. More consumers than partitions in one group do not increase parallelism.
+
+## 6. Check your understanding
+
+**Question:** Does Kafka guarantee ordering across an entire topic?
+
+**Answer:** No, ordering is guaranteed within a partition, not across all partitions.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="kafka-fundamentals" caption="Trade compliance pipeline" />
+
+## Interactive walkthrough — Trade compliance events
+
+**Real-world example:** An API publishes a compliance event; consumers in a group process records from partitions.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="kafka-fundamentals" />
+
+### Apply it in a Java backend
+
+Kafka is commonly at-least-once; handle duplicates with idempotent processing and stable event IDs.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="510" viewBox="0 0 1080 510" role="img" aria-label="HTTPS Secure Connection illustration">
+<defs><linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#0b1025"/><stop offset="1" stop-color="#1d1649"/></linearGradient><linearGradient id="panel" x1="0" x2="1"><stop stop-color="#272457"/><stop offset="1" stop-color="#1a234e"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="9" stdDeviation="12" flood-color="#000" flood-opacity=".25"/></filter><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0L7 3L0 6" fill="none" stroke="#a5b4fc" stroke-width="1.8"/></marker></defs>
+<rect width="1080" height="510" rx="26" fill="url(#bg)"/>
+<circle cx="955" cy="80" r="230" fill="#7c3aed" opacity=".09"/><circle cx="65" cy="450" r="180" fill="#06b6d4" opacity=".08"/>
+<text x="62" y="72" fill="#ede9fe" font-size="36" font-family="Arial,sans-serif" font-weight="700">HTTPS Secure Connection</text>
+<text x="63" y="109" fill="#a5b4fc" font-size="18" font-family="Arial,sans-serif">REAL-WORLD EXAMPLE · Signing in securely</text>
+
+<path d="M 246 255 C 300 209, 240 301, 294 255" stroke="#a5b4fc" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+<path d="M 486 255 C 540 209, 480 301, 534 255" stroke="#a5b4fc" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+<path d="M 726 255 C 780 209, 720 301, 774 255" stroke="#a5b4fc" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+<rect x="56" y="177" width="188" height="158" rx="20" fill="url(#panel)" stroke="#8b5cf6" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="150" cy="233" r="24" fill="#8b5cf6" opacity=".22" stroke="#8b5cf6" stroke-width="2"/>
+<text x="150" y="241" text-anchor="middle" fill="#fff" font-size="23" font-family="Arial,sans-serif" font-weight="700">1</text>
+<text x="150" y="290" text-anchor="middle" fill="#f8fafc" font-family="Arial,sans-serif" font-size="15" font-weight="700">Browser</text>
+<rect x="296" y="177" width="188" height="158" rx="20" fill="url(#panel)" stroke="#38bdf8" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="390" cy="233" r="24" fill="#38bdf8" opacity=".22" stroke="#38bdf8" stroke-width="2"/>
+<text x="390" y="241" text-anchor="middle" fill="#fff" font-size="23" font-family="Arial,sans-serif" font-weight="700">2</text>
+<text x="390" y="290" text-anchor="middle" fill="#f8fafc" font-family="Arial,sans-serif" font-size="15" font-weight="700">TLS Handshake</text>
+<rect x="536" y="177" width="188" height="158" rx="20" fill="url(#panel)" stroke="#14b8a6" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="630" cy="233" r="24" fill="#14b8a6" opacity=".22" stroke="#14b8a6" stroke-width="2"/>
+<text x="630" y="241" text-anchor="middle" fill="#fff" font-size="23" font-family="Arial,sans-serif" font-weight="700">3</text>
+<text x="630" y="290" text-anchor="middle" fill="#f8fafc" font-family="Arial,sans-serif" font-size="15" font-weight="700">Encrypted Request</text>
+<rect x="776" y="177" width="188" height="158" rx="20" fill="url(#panel)" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)"/>
+<circle cx="870" cy="233" r="24" fill="#f59e0b" opacity=".22" stroke="#f59e0b" stroke-width="2"/>
+<text x="870" y="241" text-anchor="middle" fill="#fff" font-size="23" font-family="Arial,sans-serif" font-weight="700">4</text>
+<text x="870" y="290" text-anchor="middle" fill="#f8fafc" font-family="Arial,sans-serif" font-size="15" font-weight="700">API Server</text>
+<rect x="62" y="399" width="956" height="63" rx="16" fill="#ffffff" fill-opacity=".075" stroke="#a5b4fc" stroke-opacity=".38"/>
+<circle cx="92" cy="430" r="9" fill="#34d399"/>
+<text x="115" y="438" fill="#dbeafe" font-size="19" font-family="Arial,sans-serif">Protect credentials in transit</text>
+</svg>

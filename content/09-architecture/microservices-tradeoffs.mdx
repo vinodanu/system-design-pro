@@ -1,0 +1,52 @@
+# Microservices vs Monolith
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+A monolith keeps functionality in one deployable unit; microservices split ownership across independently deployable services.
+
+## 2. Mental model
+
+Microservices may enable team autonomy and scaling of distinct workloads, but introduce networking, consistency, deployment and observability complexity.
+
+## 3. Explore the concept
+
+Sketch a small system with two clients and three backend nodes. Change one assumption (load, latency, or a server failure), then trace how the behavior changes. Explain what should remain correct and which metric will get worse.
+
+## 4. Java / Spring Boot deep dive
+
+Start with explicit Java module boundaries and evolve to Spring Boot services when autonomy or scaling justifies the costs.
+
+## 5. Production tradeoffs
+
+Distributed transactions, service discovery, integration testing and incident response get harder across services.
+
+## 6. Check your understanding
+
+**Question:** Are microservices always more scalable?
+
+**Answer:** No. A well-designed modular monolith may be simpler and scale sufficiently for many systems.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="microservices-tradeoffs" caption="Ecommerce checkout" />
+
+## Interactive walkthrough — Splitting a growing marketplace
+
+**Real-world example:** Separate catalog and order services only when teams and scaling needs justify distributed complexity.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="microservices-tradeoffs" />
+
+### Apply it in a Java backend
+
+Service boundaries follow business ownership; distributed transactions and debugging cost real time.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?

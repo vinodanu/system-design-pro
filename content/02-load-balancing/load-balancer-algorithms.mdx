@@ -1,0 +1,54 @@
+# Load Balancing Algorithms
+
+> **Difficulty:** Beginner → production engineering. **Goal:** Develop the intuition, understand implementation choices, and explain tradeoffs in interviews.
+
+## 1. Why this matters
+
+One busy backend cannot serve unlimited requests. A load balancer spreads requests across multiple healthy instances.
+
+## 2. Mental model
+
+Round robin cycles through servers; weighted round robin assigns proportional turns; least connections uses active connection counts; hashing provides affinity for a key.
+
+## 3. Explore the concept
+
+Use the controls to send requests and observe the distribution. The simulation uses round-robin, not weighted or least-connections routing.
+
+<TrafficSimulator />
+
+## 4. Java / Spring Boot deep dive
+
+Spring Cloud Gateway can route traffic to backends; at higher layers, Kubernetes Service and ingress components also influence placement.
+
+## 5. Production tradeoffs
+
+Round robin ignores varying request cost. Sticky sessions can concentrate load. Health checks and graceful draining matter during deployments.
+
+## 6. Check your understanding
+
+**Question:** When is least-connections preferable to round robin?
+
+**Answer:** When active request duration varies significantly and active connections roughly reflect ongoing load.
+
+## 7. Try it in a project
+
+Build a small Spring Boot service that demonstrates this principle. Record a baseline (latency, throughput, correctness), change one variable, and compare the results. Document what your measurements actually prove rather than assuming a benchmark result.
+
+
+## Visual explanation
+
+<ConceptIllustration topic="load-balancer-algorithms" caption="Flash sale traffic" />
+
+## Interactive walkthrough — Flash-sale traffic
+
+**Real-world example:** A load balancer spreads many checkout requests across healthy replicas.
+
+Use **Next step**, **Previous**, or **Autoplay** to trace the system, one operation at a time. The highlighted stage indicates the active part of the architecture.
+
+<ConceptLab topic="load-balancer-algorithms" />
+
+### Apply it in a Java backend
+
+Round robin ignores unequal request cost; consider least-connections and autoscaling.
+
+**Practice question:** What happens if the active stage fails, becomes slow, or receives ten times the traffic? How would you detect and recover from that situation?
